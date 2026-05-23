@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RFGFBWNKDE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RFGFBWNKDE');
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF Tools — ToolZone</title>
@@ -76,7 +85,6 @@
     </div>
   </div>
 
-  <!-- INFO TOOL -->
   <div class="tool-area show" id="tool-info">
     <div class="drop-zone" id="infoZone">
       <p>Drop PDF here or <strong>click to select</strong></p>
@@ -85,7 +93,6 @@
     <div class="info-box" id="infoResult" style="display:none;"></div>
   </div>
 
-  <!-- EXTRACT TOOL -->
   <div class="tool-area" id="tool-extract">
     <div class="drop-zone" id="extractZone">
       <p>Drop PDF here or <strong>click to select</strong></p>
@@ -96,7 +103,6 @@
     <button class="btn" id="copyExtracted" style="display:none;background:var(--accent2);">📋 Copy Extracted Text</button>
   </div>
 
-  <!-- PREVIEW TOOL -->
   <div class="tool-area" id="tool-preview">
     <div class="drop-zone" id="previewZone">
       <p>Drop PDF here or <strong>click to select</strong></p>
@@ -105,7 +111,6 @@
     <div id="pdfPages" style="margin-top:1rem;"></div>
   </div>
 
-  <!-- COUNT TOOL -->
   <div class="tool-area" id="tool-count">
     <div class="drop-zone" id="countZone">
       <p>Drop one or more PDFs here or <strong>click to select</strong></p>
@@ -209,3 +214,4 @@
 </script>
 </body>
 </html>
+
