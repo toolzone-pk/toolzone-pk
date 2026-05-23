@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Generator — ToolZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root { --bg:#0a0a0f;--card:#13131a;--border:#2a2a3a;--accent:#00e5ff;--accent2:#ff6b35;--text:#e8e8f0;--muted:#6b6b80; }
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh; }
+  nav { display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:1px solid var(--border); }
+  nav a { color:var(--accent);text-decoration:none;font-family:'Space Mono',monospace;font-size:0.85rem; }
+  nav .logo { font-family:'Space Mono',monospace;font-weight:700;font-size:1.1rem;color:var(--text); }
+  nav .logo span { color:var(--accent); }
+  .container { max-width:700px;margin:0 auto;padding:3rem 1.5rem; }
+  h1 { font-family:'Space Mono',monospace;font-size:2rem;margin-bottom:0.5rem; }
+  h1 span { color:var(--accent); }
+  .subtitle { color:var(--muted);margin-bottom:2.5rem; }
+  .field { margin-bottom:1rem; }
+  .field label { display:block;font-size:0.8rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.05em; }
+  .field textarea, .field input, .field select {
+    width:100%;padding:0.75rem 1rem;background:var(--card);border:1px solid var(--border);
+    border-radius:8px;color:var(--text);font-size:1rem;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;
+  }
+  .field textarea { resize:vertical;min-height:100px; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline:none;border-color:var(--accent); }
+  .grid2 { display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem; }
+  .btn { width:100%;padding:1rem;background:var(--accent);color:#000;border:none;border-radius:8px;font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-bottom:1rem; }
+  .btn:hover { background:#00c4dd;transform:translateY(-1px); }
+  .qr-output { display:none;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-top:1.5rem; }
+  .qr-output.show { display:block; }
+  #qrcode { display:inline-block;background:#fff;padding:16px;border-radius:8px;margin-bottom:1.5rem; }
+  #qrcode img { display:block; }
+  .btn-dl { background:var(--accent2); }
+  .btn-dl:hover { background:#e55a25; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">⚡ Tool<span>Zone</span></a>
+  <a href="/">← Back to Tools</a>
+</nav>
+<div class="container">
+  <h1>🔳 QR Code <span>Generator</span></h1>
+  <p class="subtitle">Generate QR codes for any URL, text, or message — instantly and free.</p>
+
+  <div class="field">
+    <label>Text or URL</label>
+    <textarea id="qrText" placeholder="https://example.com or any text..."></textarea>
+  </div>
+
+  <div class="grid2">
+    <div class="field">
+      <label>Size (px)</label>
+      <select id="qrSize">
+        <option value="128">128×128</option>
+        <option value="200" selected>200×200</option>
+        <option value="300">300×300</option>
+        <option value="400">400×400</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Error Correction</label>
+      <select id="qrLevel">
+        <option value="L">Low (L)</option>
+        <option value="M" selected>Medium (M)</option>
+        <option value="Q">Quartile (Q)</option>
+        <option value="H">High (H)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="field">
+      <label>Dark Color</label>
+      <input type="color" id="darkColor" value="#000000">
+    </div>
+    <div class="field">
+      <label>Light Color</label>
+      <input type="color" id="lightColor" value="#ffffff">
+    </div>
+  </div>
+
+  <button class="btn" id="generateBtn">Generate QR Code</button>
+
+  <div class="qr-output" id="qrOutput">
+    <div id="qrcode"></div>
+    <button class="btn btn-dl" id="downloadBtn">⬇ Download QR Code (PNG)</button>
+  </div>
+</div>
+
+<script>
+  let qrInstance = null;
+  document.getElementById('generateBtn').addEventListener('click', () => {
+    const text = document.getElementById('qrText').value.trim();
+    if (!text) { alert('Please enter text or URL!'); return; }
+    const size = parseInt(document.getElementById('qrSize').value);
+    const level = document.getElementById('qrLevel').value;
+    const dark = document.getElementById('darkColor').value;
+    const light = document.getElementById('lightColor').value;
+    const container = document.getElementById('qrcode');
+    container.innerHTML = '';
+    qrInstance = new QRCode(container, { text, width: size, height: size, colorDark: dark, colorLight: light, correctLevel: QRCode.CorrectLevel[level] });
+    document.getElementById('qrOutput').classList.add('show');
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const img = document.querySelector('#qrcode img');
+    if (!img) return;
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.download = 'qrcode.png';
+    a.click();
+  });
+</script>
+</body>
+</html>

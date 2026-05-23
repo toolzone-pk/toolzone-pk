@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Counter — ToolZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--card:#13131a;--border:#2a2a3a;--accent:#00e5ff;--text:#e8e8f0;--muted:#6b6b80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+  nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:1px solid var(--border);}
+  nav a{color:var(--accent);text-decoration:none;font-family:'Space Mono',monospace;font-size:0.85rem;}
+  nav .logo{font-family:'Space Mono',monospace;font-weight:700;font-size:1.1rem;color:var(--text);}
+  nav .logo span{color:var(--accent);}
+  .container{max-width:800px;margin:0 auto;padding:3rem 1.5rem;}
+  h1{font-family:'Space Mono',monospace;font-size:2rem;margin-bottom:0.5rem;}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);margin-bottom:2.5rem;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+  @media(max-width:500px){.stats{grid-template-columns:1fr 1fr;}}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;}
+  .stat .num{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;color:var(--accent);}
+  .stat .lbl{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:0.2rem;}
+  textarea{width:100%;min-height:280px;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1rem;font-family:'DM Sans',sans-serif;resize:vertical;line-height:1.6;transition:border-color 0.2s;}
+  textarea:focus{outline:none;border-color:var(--accent);}
+  .toolbar{display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap;}
+  .tbtn{padding:0.5rem 1rem;background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;}
+  .tbtn:hover{border-color:var(--accent);color:var(--accent);}
+  .reading-time{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;margin-top:1rem;display:flex;align-items:center;gap:1rem;}
+  .reading-time .icon{font-size:1.5rem;}
+  .reading-time p{color:var(--muted);font-size:0.9rem;}
+  .reading-time strong{color:var(--text);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">⚡ Tool<span>Zone</span></a>
+  <a href="/">← Back to Tools</a>
+</nav>
+<div class="container">
+  <h1>📝 Word <span>Counter</span></h1>
+  <p class="subtitle">Count words, characters, sentences and more in real-time.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="words">0</div><div class="lbl">Words</div></div>
+    <div class="stat"><div class="num" id="chars">0</div><div class="lbl">Characters</div></div>
+    <div class="stat"><div class="num" id="charsNoSpace">0</div><div class="lbl">No Spaces</div></div>
+    <div class="stat"><div class="num" id="sentences">0</div><div class="lbl">Sentences</div></div>
+    <div class="stat"><div class="num" id="paragraphs">0</div><div class="lbl">Paragraphs</div></div>
+    <div class="stat"><div class="num" id="lines">0</div><div class="lbl">Lines</div></div>
+  </div>
+
+  <textarea id="textArea" placeholder="Type or paste your text here..."></textarea>
+
+  <div class="reading-time">
+    <div class="icon">📖</div>
+    <p>Reading time: <strong id="readTime">0 sec</strong> &nbsp;|&nbsp; Speaking time: <strong id="speakTime">0 sec</strong></p>
+  </div>
+
+  <div class="toolbar">
+    <button class="tbtn" id="clearBtn">🗑 Clear</button>
+    <button class="tbtn" id="copyBtn">📋 Copy Text</button>
+    <button class="tbtn" id="upperBtn">UPPERCASE</button>
+    <button class="tbtn" id="lowerBtn">lowercase</button>
+    <button class="tbtn" id="titleBtn">Title Case</button>
+  </div>
+</div>
+
+<script>
+  const ta=document.getElementById('textArea');
+  function update(){
+    const t=ta.value;
+    const words=t.trim()===''?0:t.trim().split(/\s+/).length;
+    const chars=t.length;
+    const charsNoSpace=t.replace(/\s/g,'').length;
+    const sentences=t.trim()===''?0:(t.match(/[^.!?]+[.!?]+/g)||[]).length;
+    const paragraphs=t.trim()===''?0:t.split(/\n\s*\n/).filter(p=>p.trim()).length||1;
+    const lines=t.trim()===''?0:t.split('\n').length;
+    document.getElementById('words').textContent=words;
+    document.getElementById('chars').textContent=chars;
+    document.getElementById('charsNoSpace').textContent=charsNoSpace;
+    document.getElementById('sentences').textContent=sentences;
+    document.getElementById('paragraphs').textContent=paragraphs;
+    document.getElementById('lines').textContent=lines;
+    const readSec=Math.round(words/200*60);
+    const speakSec=Math.round(words/130*60);
+    document.getElementById('readTime').textContent=readSec<60?readSec+' sec':Math.round(readSec/60)+' min';
+    document.getElementById('speakTime').textContent=speakSec<60?speakSec+' sec':Math.round(speakSec/60)+' min';
+  }
+  ta.addEventListener('input',update);
+  document.getElementById('clearBtn').addEventListener('click',()=>{ta.value='';update();});
+  document.getElementById('copyBtn').addEventListener('click',()=>navigator.clipboard.writeText(ta.value));
+  document.getElementById('upperBtn').addEventListener('click',()=>{ta.value=ta.value.toUpperCase();update();});
+  document.getElementById('lowerBtn').addEventListener('click',()=>{ta.value=ta.value.toLowerCase();update();});
+  document.getElementById('titleBtn').addEventListener('click',()=>{ta.value=ta.value.replace(/\w\S*/g,t=>t.charAt(0).toUpperCase()+t.slice(1).toLowerCase());update();});
+</script>
+</body>
+</html>

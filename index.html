@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToolZone — Free Online Tools</title>
+<meta name="description" content="ToolZone offers free online tools like Image Resizer, QR Code Generator, PDF Tools, Password Generator and more. No signup required.">
+<meta name="keywords" content="free online tools, image resizer, qr code generator, pdf tools, password generator, word counter, color picker">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://toolzone.toolzone.workers.dev/">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--card:#13131a;--border:#2a2a3a;--accent:#00e5ff;--accent2:#ff6b35;--text:#e8e8f0;--muted:#6b6b80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+  nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:1px solid var(--border);}
+  nav .logo{font-family:'Space Mono',monospace;font-weight:700;font-size:1.2rem;}
+  nav .logo span{color:var(--accent);}
+  nav .links{display:flex;gap:1.5rem;}
+  nav .links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s;}
+  nav .links a:hover{color:var(--accent);}
+  .hero{text-align:center;padding:4rem 2rem 3rem;}
+  .hero h1{font-family:'Space Mono',monospace;font-size:2.5rem;line-height:1.2;margin-bottom:1rem;}
+  .hero h1 span{color:var(--accent);}
+  .hero p{color:var(--muted);font-size:1.1rem;max-width:500px;margin:0 auto;}
+  .badge{display:inline-block;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);color:var(--accent);font-family:'Space Mono',monospace;font-size:0.75rem;padding:0.3rem 0.8rem;border-radius:20px;margin-bottom:1.5rem;}
+  .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;max-width:960px;margin:0 auto;padding:0 1.5rem 4rem;}
+  .tool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;text-decoration:none;color:var(--text);transition:all 0.25s;position:relative;overflow:hidden;}
+  .tool-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.05),transparent);opacity:0;transition:opacity 0.3s;}
+  .tool-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,229,255,0.1);}
+  .tool-card:hover::before{opacity:1;}
+  .tool-card .icon{font-size:2.2rem;margin-bottom:1rem;}
+  .tool-card h2{font-family:'Space Mono',monospace;font-size:1rem;margin-bottom:0.5rem;}
+  .tool-card p{color:var(--muted);font-size:0.9rem;line-height:1.5;}
+  .tool-card .arrow{position:absolute;top:1.5rem;right:1.5rem;color:var(--border);font-size:1.2rem;transition:color 0.2s;}
+  .tool-card:hover .arrow{color:var(--accent);}
+  footer{border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:0.85rem;}
+  footer a{color:var(--muted);text-decoration:none;margin:0 0.75rem;}
+  footer a:hover{color:var(--accent);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">⚡ Tool<span>Zone</span></div>
+  <div class="links">
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="badge">✦ No Signup Required</div>
+  <h1>Free Online <span>Tools</span></h1>
+  <p>Image tools, PDF tools, QR generator, password generator and more — instant & free.</p>
+</div>
+
+<div class="tools">
+  <a href="/image-resizer.html" class="tool-card">
+    <div class="icon">🖼️</div>
+    <h2>Image Resizer</h2>
+    <p>Resize images online instantly without losing quality. Supports JPEG, PNG, WebP.</p>
+    <div class="arrow">→</div>
+  </a>
+  <a href="/pdf-tools.html" class="tool-card">
+    <div class="icon">📄</div>
+    <h2>PDF Tools</h2>
+    <p>View info, extract text, preview pages, and count pages in your PDF files.</p>
+    <div class="arrow">→</div>
+  </a>
+  <a href="/qr-generator.html" class="tool-card">
+    <div class="icon">🔳</div>
+    <h2>QR Generator</h2>
+    <p>Create QR codes for any URL or text. Custom colors and sizes. Free download.</p>
+    <div class="arrow">→</div>
+  </a>
+  <a href="/password-generator.html" class="tool-card">
+    <div class="icon">🔐</div>
+    <h2>Password Generator</h2>
+    <p>Create strong, secure passwords instantly with custom length and characters.</p>
+    <div class="arrow">→</div>
+  </a>
+  <a href="/word-counter.html" class="tool-card">
+    <div class="icon">📝</div>
+    <h2>Word Counter</h2>
+    <p>Count words, characters, sentences, and reading time in real-time.</p>
+    <div class="arrow">→</div>
+  </a>
+  <a href="/color-picker.html" class="tool-card">
+    <div class="icon">🎨</div>
+    <h2>Color Picker</h2>
+    <p>Pick and copy colors in HEX, RGB, or HSL format for your projects.</p>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+<footer>
+  <p>© 2026 ToolZone — All Rights Reserved</p>
+  <p style="margin-top:0.75rem;">
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy.html">Privacy Policy</a>
+    <a href="/terms.html">Terms</a>
+  </p>
+</footer>
+</body>
+</html>

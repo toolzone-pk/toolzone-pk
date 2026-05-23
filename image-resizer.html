@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Resizer — ToolZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #13131a;
+    --border: #2a2a3a;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); }
+  nav a { color: var(--accent); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.85rem; }
+  nav .logo { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 1.1rem; color: var(--text); }
+  nav .logo span { color: var(--accent); }
+  .container { max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem; }
+  h1 { font-family: 'Space Mono', monospace; font-size: 2rem; margin-bottom: 0.5rem; }
+  h1 span { color: var(--accent); }
+  .subtitle { color: var(--muted); margin-bottom: 2.5rem; }
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--card);
+    margin-bottom: 1.5rem;
+  }
+  .drop-zone:hover, .drop-zone.active { border-color: var(--accent); background: rgba(0,229,255,0.05); }
+  .drop-zone .icon { font-size: 3rem; margin-bottom: 1rem; }
+  .drop-zone p { color: var(--muted); }
+  .drop-zone strong { color: var(--accent); }
+  #fileInput { display: none; }
+  .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .field label { display: block; font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .field input, .field select {
+    width: 100%; padding: 0.75rem 1rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+  .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .checkbox-row input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+  .checkbox-row label { color: var(--muted); cursor: pointer; }
+  .btn {
+    width: 100%; padding: 1rem;
+    background: var(--accent); color: #000;
+    border: none; border-radius: 8px;
+    font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    margin-bottom: 1rem;
+  }
+  .btn:hover { background: #00c4dd; transform: translateY(-1px); }
+  .btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+  .preview-area { display: none; }
+  .preview-area.show { display: block; }
+  .preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .preview-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .preview-card img { width: 100%; height: 180px; object-fit: contain; background: #1a1a25; }
+  .preview-card p { padding: 0.75rem; font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .preview-card strong { color: var(--text); }
+  .btn-download { background: var(--accent2); }
+  .btn-download:hover { background: #e55a25; }
+  canvas { display: none; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">⚡ Tool<span>Zone</span></a>
+  <a href="/">← Back to Tools</a>
+</nav>
+<div class="container">
+  <h1>🖼️ Image <span>Resizer</span></h1>
+  <p class="subtitle">Resize images instantly in your browser. No upload to server. 100% private.</p>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="icon">📁</div>
+    <p>Drag & drop your image here<br>or <strong>click to browse</strong></p>
+    <input type="file" id="fileInput" accept="image/*">
+  </div>
+
+  <div class="controls">
+    <div class="field">
+      <label>Width (px)</label>
+      <input type="number" id="width" placeholder="e.g. 800" min="1">
+    </div>
+    <div class="field">
+      <label>Height (px)</label>
+      <input type="number" id="height" placeholder="e.g. 600" min="1">
+    </div>
+    <div class="field">
+      <label>Quality (%)</label>
+      <input type="number" id="quality" value="90" min="1" max="100">
+    </div>
+    <div class="field">
+      <label>Format</label>
+      <select id="format">
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/png">PNG</option>
+        <option value="image/webp">WebP</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="keepRatio" checked>
+    <label for="keepRatio">Keep aspect ratio</label>
+  </div>
+
+  <button class="btn" id="resizeBtn" disabled>Resize Image</button>
+
+  <div class="preview-area" id="previewArea">
+    <div class="preview-grid">
+      <div class="preview-card">
+        <img id="originalPreview" src="" alt="Original">
+        <p><strong>Original</strong><br><span id="originalInfo"></span></p>
+      </div>
+      <div class="preview-card">
+        <img id="resizedPreview" src="" alt="Resized">
+        <p><strong>Resized</strong><br><span id="resizedInfo"></span></p>
+      </div>
+    </div>
+    <button class="btn btn-download" id="downloadBtn">⬇ Download Resized Image</button>
+  </div>
+  <canvas id="canvas"></canvas>
+</div>
+
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const widthInput = document.getElementById('width');
+  const heightInput = document.getElementById('height');
+  const resizeBtn = document.getElementById('resizeBtn');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let originalImage = null, origW = 0, origH = 0;
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('active'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('active'); handleFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+
+  widthInput.addEventListener('input', () => {
+    if (document.getElementById('keepRatio').checked && originalImage && widthInput.value) {
+      heightInput.value = Math.round(widthInput.value / origW * origH);
+    }
+  });
+  heightInput.addEventListener('input', () => {
+    if (document.getElementById('keepRatio').checked && originalImage && heightInput.value) {
+      widthInput.value = Math.round(heightInput.value / origH * origW);
+    }
+  });
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      originalImage = new Image();
+      originalImage.onload = () => {
+        origW = originalImage.width; origH = originalImage.height;
+        widthInput.value = origW; heightInput.value = origH;
+        document.getElementById('originalPreview').src = e.target.result;
+        document.getElementById('originalInfo').textContent = `${origW} × ${origH}px`;
+        resizeBtn.disabled = false;
+        dropZone.querySelector('p').innerHTML = `<strong>${file.name}</strong> loaded!`;
+      };
+      originalImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  resizeBtn.addEventListener('click', () => {
+    const w = parseInt(widthInput.value), h = parseInt(heightInput.value);
+    const q = parseInt(document.getElementById('quality').value) / 100;
+    const fmt = document.getElementById('format').value;
+    canvas.width = w; canvas.height = h;
+    ctx.drawImage(originalImage, 0, 0, w, h);
+    const dataUrl = canvas.toDataURL(fmt, q);
+    document.getElementById('resizedPreview').src = dataUrl;
+    const size = Math.round(dataUrl.length * 0.75 / 1024);
+    document.getElementById('resizedInfo').textContent = `${w} × ${h}px — ~${size} kB`;
+    document.getElementById('previewArea').classList.add('show');
+    document.getElementById('downloadBtn').onclick = () => {
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `resized.${fmt.split('/')[1]}`;
+      a.click();
+    };
+  });
+</script>
+</body>
+</html>
